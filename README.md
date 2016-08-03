@@ -1,0 +1,2 @@
+# jqgen
+jQuery Plugin Generator
