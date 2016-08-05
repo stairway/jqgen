@@ -107,7 +107,7 @@ function buildHelperMethods($helperMethods) {
       $method = trim($method);
       $methods .= <<<JS
         
-    function {$method}() {}
+    function {$method} () {}
 
 JS;
     }
@@ -202,7 +202,7 @@ function buildWrapper_fnApi($pluginName) {
    * The following method should be called with it's context manually specified, e.g.
    * using .bind(), .call(), or .apply();
    */
-  function _prep (element, option, callback) {
+  function _prep ( element, option, callback ) {
     var options = typeof option === "object" && option, data;
     /*
      * Use "$.data" to save each instance of the plugin in case
@@ -446,15 +446,15 @@ function buildHelperMethodsCore_fnApi() {
   GLOBALS - CORE HELPER FUNCTIONS
   ============================================================= */
   
-  function test (input, type) {
+  function test ( input, type ) {
     type = type || "function";
-    if (typeof input === type) {
+    if ( typeof input === type ) {
       return true;
     }
     return false;
   }
 
-  function trigger (event, args) {
+  function trigger ( event, args ) {
     var context = triggerContext;
     // for external use
     $(context).trigger(event, args);
@@ -462,16 +462,16 @@ function buildHelperMethodsCore_fnApi() {
     \$events.triggerHandler(event);
   }
 
-  function log (label /*, arg2, arg3, ... argN */) {
-    if (__debug && typeof console === "object") {
+  function log ( label /*, arg2, arg3, ... argN */ ) {
+    if ( __debug && typeof console === "object" ) {
       var 
       separator = " --- ",
       args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-      if (label === __table && console.hasOwnProperty("table")) {
+      if ( label === __table && console.hasOwnProperty("table") ) {
         args.shift();
         console.table.apply(this, args);
       } else {
-        if (console.hasOwnProperty("log")) {
+        if ( console.hasOwnProperty("log") ) {
           args[0] = (label.toString() + separator);
           console.log.apply(this, args);
         }
@@ -479,7 +479,7 @@ function buildHelperMethodsCore_fnApi() {
     }
   }
 
-  function getDOMSelector (el, full) {
+  function getDOMSelector ( el, full ) {
     var selector = $(el)
       .parents()
       .map(function () { return el.tagName; })
@@ -489,18 +489,18 @@ function buildHelperMethodsCore_fnApi() {
       .join(" > ");
 
     var id = $(el).attr("id");
-    if (id) { 
+    if ( id ) { 
       selector += "#"+ id;
     }
 
     var classNames = $(el).attr("class");
-    if (classNames) {
+    if ( classNames ) {
       selector += "." + $.trim(classNames).replace(/\s/gi, ".");
     }
     
-    if (!full) {
+    if ( !full ) {
       var parts = selector.split("#");
-      if (parts.length > 1) {
+      if ( parts.length > 1 ) {
         parts.shift();
         selector = "#" + parts.join();
       }
@@ -509,11 +509,11 @@ function buildHelperMethodsCore_fnApi() {
     return selector;
   }
 
-  function getSelector (el){
+  function getSelector ( el ) {
     var \$el = $(el);
 
     var id = \$el.attr("id");
-    if (id) { //"should" only be one of these if theres an ID
+    if ( id ) { //"should" only be one of these if theres an ID
         return "#"+ id;
     }
 
@@ -524,22 +524,22 @@ function buildHelperMethodsCore_fnApi() {
       .reverse()
       .join(" ");
 
-    if (selector) {
+    if ( selector ) {
         selector += " "+ \$el[0].nodeName;
     }
 
     var classNames = \$el.attr("class");
-    if (classNames) {
+    if ( classNames ) {
         selector += "." + $.trim(classNames).replace(/\s/gi, ".");
     }
 
     var name = \$el.attr('name');
-    if (name) {
+    if ( name ) {
         selector += "[name='" + name + "']";
     }
-    if (!name){
+    if ( !name ){
         var index = \$el.index();
-        if (index) {
+        if ( index ) {
             index = index + 1;
             selector += ":nth-child(" + index + ")";
         }
@@ -548,9 +548,9 @@ function buildHelperMethodsCore_fnApi() {
     return selector;
   }
 
-  function doCallback (callback, argsArr, context) {
+  function doCallback ( callback, argsArr, context ) {
     context = context || self;
-    if (test(callback)) {
+    if ( test(callback) ) {
       callback.apply(self, argsArr);
     }
   }
@@ -588,13 +588,13 @@ JS;
       if ($i < (count($methodsArr) - 1)) {
         $methods .= <<<JS
         
-  function {$method}({$arg}) {}
+  function {$method} ( {$arg} ) {}
 
 JS;
       } else {
         $methods .= <<<JS
         
-  function {$method}({$arg}) {}
+  function {$method} ( {$arg} ) {}
 JS;
       }
     }
@@ -610,7 +610,7 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
     
     onReady: function () {
       var callback = function () {
-        if (test(self._callback, "function")) {
+        if ( test(self._callback, "function") ) {
           self._callback.call(self);
         }
         trigger(event_ready, [this]);
@@ -628,7 +628,7 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
     },
     
     prep: function () {
-      if (this._DOMSelector) {
+      if ( this._DOMSelector ) {
         \$source = this.\$element;
       } else {
 
@@ -655,13 +655,13 @@ JS;
       if ($i < (count($methodsArr) - 1)) {
         $methods .= <<<JS
         
-    {$method}: function ({$arg}) {},
+    {$method}: function ( {$arg} ) {},
   
 JS;
       } else {
         $methods .= <<<JS
         
-    {$method}: function ({$arg}) {}
+    {$method}: function ( {$arg} ) {}
 JS;
       }
     }
@@ -684,7 +684,7 @@ function buildConstructor_fnApi($pluginName) {
    * 
    * @usage: new {$pluginName}(element, options, callback)
    */
-  function {$pluginName}(element, options, callback) {
+  function {$pluginName} ( element, options, callback ) {
     this._defaults = defaults;
     this._options = options;
     this._callback = callback;
