@@ -628,7 +628,11 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
     },
     
     prep: function () {
-      \$source = this.\$element;
+      if (this._DOMSelector) {
+        \$source = this.\$element;
+      } else {
+
+      }
     },
 JS;
   if ($apiMethods) {
@@ -686,10 +690,11 @@ function buildConstructor_fnApi($pluginName) {
     this._callback = callback;
     this._name = pluginName;
     this._version = pluginVersion;
+    this._DOMSelector = getDOMSelector(element);
 
     this.element = element;
-    this.\$element = $(element);
-    this.selector = $(element).selector;
+    this.$element = $(element);
+    this.selector = getSelector(element);
 
     /*
      * This next line takes advantage of HTML5 data attributes
