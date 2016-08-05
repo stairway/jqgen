@@ -179,7 +179,7 @@ JS;
   
   $body = <<<JS
     
-    return this.each(function() {
+    return this.each(function () {
       {$lines}
       // MAIN BODY - END
       
@@ -281,9 +281,12 @@ JS;
   or use across multiple functions
   ============================================================= */
   
-  debug = true,
+  __debug = true,
+  __table = "console.table",
+  
   self = false,
-  settings = false,  
+  settings = false,
+  triggerContext = document,
 JS;
   if ($varsG) {
     $out .= <<<JS
@@ -314,8 +317,8 @@ function buildEvents_fnApi($pluginEvents, $pluginPrefix, $pluginNamespace) {
   
   /**
    * name:    {$pluginPrefix}:{$event}
-   * listen:  \$(document).on("{$pluginPrefix}:{$event}.{$pluginNamespace}", function(event, api) {});
-   * trigger: trigger(event_{$event}, [this]);
+   * listen:  \$(document).on("{$pluginPrefix}:{$event}.{$pluginNamespace}", function (event, api) {});
+   * trigger: trigger (event_{$event}, [this]);
    */
   event_{$event} = pluginPrefix + ":${event}",
   
@@ -434,27 +437,16 @@ JS;
 }
 
 /**
- * Build Helper Methods
+ * Build Helper Methods - Core
  */
-function buildHelperMethods_fnApi($helperMethods) {
+function buildHelperMethodsCore_fnApi($helperMethods) {
   $methods = <<<JS
   
   /* =============================================================
   GLOBALS - CORE HELPER FUNCTIONS
   ============================================================= */
   
-  function debug(label /* , arg1, arg2, ... argN */) {
-    if (debug) {
-      var seperator = " --- ",
-      args = (arguments.length === 1 ? 
-        [arguments[0]] : 
-          Array.apply(null, arguments));
-      args[0] = label.toString() + seperator;
-      console.log.apply(this, args);
-    }
-  }
-   
-  function test(input, type) {
+  function test (input, type) {
     type = type || "function";
     if (typeof input === type) {
       return true;
@@ -462,14 +454,117 @@ function buildHelperMethods_fnApi($helperMethods) {
     return false;
   }
 
-  function trigger(event, args) {
-    var context = document;
+  function trigger (event, args) {
+    var context = triggerContext;
     // for external use
     $(context).trigger(event, args);
     // for internal use
     \$events.triggerHandler(event);
   }
+
+  function log (label /*, arg2, arg3, ... argN */) {
+    if (__debug && typeof console === "object") {
+      var 
+      separator = " --- ",
+      args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+      if (label === __table && console.hasOwnProperty("table")) {
+        args.shift();
+        console.table.apply(this, args);
+      } else {
+        if (console.hasOwnProperty("log")) {
+          args[0] = (label.toString() + separator);
+          console.log.apply(this, args);
+        }
+      }
+    }
+  }
+
+  function getDOMSelector (el, full) {
+    var selector = $(el)
+      .parents()
+      .map(function () { return el.tagName; })
+      .get()
+      .reverse()
+      .concat([el.nodeName])
+      .join(" > ");
+
+    var id = $(el).attr("id");
+    if (id) { 
+      selector += "#"+ id;
+    }
+
+    var classNames = $(el).attr("class");
+    if (classNames) {
+      selector += "." + $.trim(classNames).replace(/\s/gi, ".");
+    }
+    
+    if (!full) {
+      var parts = selector.split("#");
+      if (parts.length > 1) {
+        parts.shift();
+        selector = "#" + parts.join();
+      }
+    }
+    
+    return selector;
+  }
+
+  function getSelector (el){
+    var \$el = $(el);
+
+    var id = \$el.attr("id");
+    if (id) { //"should" only be one of these if theres an ID
+        return "#"+ id;
+    }
+
+    var selector = \$el
+      .parents()
+      .map(function () { return this.tagName; })
+      .get()
+      .reverse()
+      .join(" ");
+
+    if (selector) {
+        selector += " "+ \$el[0].nodeName;
+    }
+
+    var classNames = \$el.attr("class");
+    if (classNames) {
+        selector += "." + $.trim(classNames).replace(/\s/gi, ".");
+    }
+
+    var name = \$el.attr('name');
+    if (name) {
+        selector += "[name='" + name + "']";
+    }
+    if (!name){
+        var index = \$el.index();
+        if (index) {
+            index = index + 1;
+            selector += ":nth-child(" + index + ")";
+        }
+    }
+    
+    return selector;
+  }
+
+  function doCallback (callback, argsArr, context) {
+    context = context || self;
+    if (test(callback)) {
+      callback.apply(self, argsArr);
+    }
+  }
 JS;
+
+  return $methods;
+}
+
+/**
+ * Build Helper Methods - Custom
+ */
+function buildHelperMethodsCustom_fnApi($helperMethods) {
+  $methods = "";
+  
   if ($helperMethods) {
     $methodsArr = explode(',', $helperMethods);
     $methods .= <<<JS
@@ -513,8 +608,8 @@ JS;
 function buildApiMethods_fnApi($pluginName, $apiMethods) {
   $methods = <<<JS
     
-    onReady: function() {
-      var callback = function() {
+    onReady: function () {
+      var callback = function () {
         if (test(self._callback, "function")) {
           self._callback.call(self);
         }
@@ -525,14 +620,14 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
       return this.\$element;
     },
     
-    addBindings: function() {
+    addBindings: function () {
       
       // $(document).on(...
       
       return this.\$element;
     },
     
-    prep: function() {
+    prep: function () {
       \$source = this.\$element;
     },
 JS;
@@ -556,13 +651,13 @@ JS;
       if ($i < (count($methodsArr) - 1)) {
         $methods .= <<<JS
         
-    {$method}: function({$arg}) {},
+    {$method}: function ({$arg}) {},
   
 JS;
       } else {
         $methods .= <<<JS
         
-    {$method}: function({$arg}) {}
+    {$method}: function ({$arg}) {}
 JS;
       }
     }
@@ -607,7 +702,6 @@ function buildConstructor_fnApi($pluginName) {
     this.settings = $.extend({}, this._defaults, this._options, this.metadata);
 
     this.init();
-    this.addBindings();
     this.onReady();
   }
 JS;
@@ -625,6 +719,7 @@ function buildBody_fnApi($pluginName, $str) {
       settings = this.settings;
       
       this.prep();
+      this.addBindings();
       
       // MAIN BODY - BEGIN
       
@@ -647,7 +742,7 @@ JS;
   
   $body = <<<JS
   
-    init: function() {{$bodyLines}
+    init: function () {{$bodyLines}
       // MAIN BODY - END
       
       trigger(event_init, [this]);
@@ -736,8 +831,8 @@ switch ($pluginStyle) {
 JS;
     
     $out = <<<JS
-;(function($, window, document, undefined) {
-  $.{$pluginName} = function({$optionsArg}) {{$options}{$methods}{$body}{$end}};
+;(function ($, window, document, undefined) {
+  $.{$pluginName} = function ({$optionsArg}) {{$options}{$methods}{$body}{$end}};
 })(window.jQuery, window, document);
 JS;
     break;
@@ -754,8 +849,8 @@ JS;
 JS;
 
     $out = <<<JS
-;(function($, window, document, undefined) {
-  $.fn.{$pluginName} = function({$optionsArg}) {{$options}{$methods}{$body}{$end}};
+;(function ($, window, document, undefined) {
+  $.fn.{$pluginName} = function ({$optionsArg}) {{$options}{$methods}{$body}{$end}};
 })(window.jQuery, window, document);
 JS;
     break;
@@ -770,7 +865,8 @@ JS;
     $wrapper      = buildWrapper_fnApi($pluginName);
     $constructor  = buildConstructor_fnApi($pluginName);
     $body         = buildBody_fnApi($pluginName, $pluginBody);
-    $methodsH     = buildHelperMethods_fnApi($helperMethods);
+    $methodsHCore = buildHelperMethodsCore_fnApi();
+    $methodsH     = buildHelperMethodsCustom_fnApi($helperMethods);
     $methodsA     = buildApiMethods_fnApi($pluginName, $apiMethods);
     $description  = buildDescription($pluginName, $pluginDescription, $pluginVersion);
     $license      = buildLicense($licenseOrg, $copyrightYear, $pluginName, $pluginVersion, $pluginDescription, $generatedBy);
@@ -784,11 +880,10 @@ JS;
     }
     $out .= <<<JS
 {$description}
-;(function( $, window, document, undefined ) {
+;(function ( $, window, document, undefined ) {
   
   "use strict";
-  {$vars}
-  {$methodsH}
+  {$vars}{$methodsH}
   {$constructor}
   
   /* =============================================================
@@ -799,6 +894,7 @@ JS;
     constructor: {$pluginName},
     {$body}{$methodsA}
   }
+  {$methodsHCore}
   {$wrapper}
   
   /*
