@@ -693,7 +693,7 @@ function buildConstructor_fnApi($pluginName) {
     this._DOMSelector = getDOMSelector(element);
 
     this.element = element;
-    this.$element = $(element);
+    this.\$element = $(element);
     this.selector = getSelector(element);
 
     /*
