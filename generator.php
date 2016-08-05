@@ -202,7 +202,7 @@ function buildWrapper_fnApi($pluginName) {
    * The following method should be called with it's context manually specified, e.g.
    * using .bind(), .call(), or .apply();
    */
-  function _prep(element, option, callback) {
+  function _prep (element, option, callback) {
     var options = typeof option === "object" && option, data;
     /*
      * Use "$.data" to save each instance of the plugin in case
@@ -439,7 +439,7 @@ JS;
 /**
  * Build Helper Methods - Core
  */
-function buildHelperMethodsCore_fnApi($helperMethods) {
+function buildHelperMethodsCore_fnApi() {
   $methods = <<<JS
   
   /* =============================================================
