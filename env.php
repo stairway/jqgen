@@ -10,6 +10,6 @@ $vendor_url     = $theme_url . "/_vendor";
 $script_url     = $_SERVER['SCRIPT_NAME'] . "?";
 $request_url    = $script_url . $_SERVER['QUERY_STRING'];
 $action_url     = "/action.php?";
-$generator_url  = "/generator.php";
+$generator_url  = "/generator_editable.php";
 
 date_default_timezone_set('America/New_York');
