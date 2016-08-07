@@ -716,7 +716,7 @@ JS;
  * Build Body - Fn Api
  */
 function buildBody_fnApi($pluginName, $str) {
-  $bodyLines .= <<<JS
+  $lines .= <<<JS
       
       self = this;
       settings = this.settings;
@@ -730,14 +730,14 @@ function buildBody_fnApi($pluginName, $str) {
 JS;
   if ($str) {
     $eol = PHP_EOL;
-    foreach(preg_split('/(?:'.$eol.'|\n)/', $str) as $bodyLine) {
-      $bodyLines .= <<<JS
-{$bodyLine}
+    foreach(preg_split('/(?:'.$eol.'|\n)/', $str) as $line) {
+      $lines .= <<<JS
+{$line}
       
 JS;
     }
   } else {
-    $bodyLines .= <<<JS
+    $lines .= <<<JS
 /* .............. */
 
 JS;
@@ -745,7 +745,7 @@ JS;
   
   $body = <<<JS
   
-    init: function () {{$bodyLines}
+    init: function () {{$lines}
       // MAIN BODY - END
       
       trigger(event_init, [this]);
