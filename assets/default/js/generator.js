@@ -89,37 +89,76 @@
   
   $(document).ready(function(){
     var shadowTimeout = false;
+    var toolbarAttached = false;
     
-    $(document).on("touchstart", function(){
-      $("#toolbar").show();
-    }).on("touchend", function(){
-      shadowTimeout = setTimeout(function(){
-        $("#toolbar").hide();
-        clearTimeout(shadowTimeout);
-        shadowTimeout = false;
-      }, 3000);
-    });
-    
-    $(document).on("mousemove", function(){
+    function setToolbarAttached() {
+      toolbarAttached = true;
       $("#toolbar").removeClass("hidden");
-      
-      $("#toolbar").on("mouseenter", function(){
-        $("#toolbar").addClass("over");
-      }).on("mouseleave touchend", function(){
-        $("#toolbar").addClass("hidden");
-        $("#toolbar").removeClass("over");
-      });
-      
+      $("body").addClass("toolbar-attach");
+      $(document).off("mousemove.jqgen");
+      $("#toolbar").off("mouseenter.jqgen");
+      $("#toolbar").off("mouseleave.jqgen");
+      $(document).off("touchstart.jqgen");
+      $(document).off("touchend.jqgen");
       if (shadowTimeout) {
         clearTimeout(shadowTimeout);
-        shadowTimeout = false;
       }
-      
-      if (!($("#toolbar").is(".over")) || ($("#toolbar").is(".hidden") && $("#toolbar").is(".over"))) {
+    }
+    
+    function setToolbarDetached() {
+      toolbarAttached = false;
+      $("body").removeClass("toolbar-attach");
+      $(document).on("touchstart.jqgen", function(){
+        $("#toolbar").removeClass("hidden");
+      }).on("touchend.jqgen", function(){
         shadowTimeout = setTimeout(function(){
           $("#toolbar").addClass("hidden");
-        }, 1000);
+          clearTimeout(shadowTimeout);
+          shadowTimeout = false;
+        }, 3000);
+      });
+      
+      $(document).on("mousemove.jqgen", function(){
+        $("#toolbar").removeClass("hidden");
+        
+        $("#toolbar").on("mouseenter.jqgen", function(){
+          $("#toolbar").addClass("over");
+        }).on("mouseleave", function(){
+          $("#toolbar").addClass("hidden");
+          $("#toolbar").removeClass("over");
+        });
+        
+        if (shadowTimeout) {
+          clearTimeout(shadowTimeout);
+          shadowTimeout = false;
+        }
+        
+        if (!($("#toolbar").is(".over")) || ($("#toolbar").is(".hidden") && $("#toolbar").is(".over"))) {
+          shadowTimeout = setTimeout(function(){
+            $("#toolbar").addClass("hidden");
+          }, 1000);
+        }
+      });
+    }
+    
+    var deviceWidthSm = 480;
+    
+    $(window).resize(function(){
+      if ($(this).width() <= deviceWidthSm) {
+        if (!toolbarAttached) {
+          setToolbarAttached();
+        }
+      } else {
+        if (toolbarAttached) {
+          setToolbarDetached();
+        }
       }
     });
+    
+    if ($(window).width() <= deviceWidthSm) {
+      setToolbarAttached();
+    } else {
+      setToolbarDetached();
+    }
   });
 })(window.jQuery, window, document);

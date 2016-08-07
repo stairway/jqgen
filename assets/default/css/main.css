@@ -11,6 +11,6 @@
   height: 400px;
 }
 
-#editor:focus {
+#editor.ace_focus {
   border-color: #66afe9;
 }

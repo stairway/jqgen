@@ -39,6 +39,13 @@
   right: 0;
 }
 
+body.toolbar-attach #toolbar {
+  display: block;
+}
+body.toolbar-attach #editor {
+  top: 3rem;
+}
+
 .hidden {
   display: none;
 }
