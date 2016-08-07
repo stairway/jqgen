@@ -13,7 +13,7 @@
       <link rel="stylesheet" href="<?php echo $theme_url ?>/css/generator.css" />
     </head>
     <body>
-      <div id="toolbar" class="container-fluid hidden">
+      <div id="toolbar" class="container-fluid shadow-bottom hidden">
         <div class="row">
           <div class="col-xs-12">
             <button id="raw" class="btn btn-secondary btn-sm">View Raw</button>
