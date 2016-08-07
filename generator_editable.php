@@ -949,34 +949,7 @@ JS;
       <title>jQuery Plugin Generator</title>
       <link rel="stylesheet" href="<?php echo $theme_url ?>/css/font-awesome.min.css" />
       <link rel="stylesheet" href="<?php echo $theme_url ?>/css/bootstrap.min.css" />
-      <style type="text/css">        
-        #toolbar {
-          height: 3rem;
-        }
-        
-        #toolbar .row {
-          margin-top: .5rem;
-          margin-bottom: .5rem;
-        }
-        
-        #toolbar button {
-          height: 2rem;
-        }
-        
-        #toolbar .custom-control-indicator {
-          margin-top: .1rem;
-        }
-        
-        #editor { 
-          margin: 0;
-          position: absolute;
-          overflow: hidden;
-          top: 3rem;
-          bottom: 0;
-          left: 0;
-          right: 0;
-        }
-      </style>
+      <link rel="stylesheet" href="<?php echo $theme_url ?>/css/generator.css" />
     </head>
     <body>
       <div id="toolbar" class="container-fluid">
@@ -988,6 +961,16 @@ JS;
               <span class="custom-control-indicator"></span>
               <span class="custom-control-description">Read only</span>
             </label>
+            <label class="custom-control custom-checkbox m-l-1">
+              <input id="softTabs" name="softTabs" type="checkbox" class="custom-control-input" checked>
+              <span class="custom-control-indicator"></span>
+              <span class="custom-control-description">Use soft tabs</span>
+            </label>
+            <label class="custom-control custom-checkbox m-l-1">
+              <input id="showInvisibles" name="showInvisibles" type="checkbox" class="custom-control-input" checked>
+              <span class="custom-control-indicator"></span>
+              <span class="custom-control-description">Show invisibles</span>
+            </label>
           </div>
         </div>
       </div>
@@ -996,88 +979,6 @@ JS;
 
       <script src="<?php echo $theme_url ?>/js/jquery-2.1.4.min.js"></script>
       <script src="<?php echo $theme_url ?>/js/ace-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
-      <script src="<?php echo $theme_url ?>/js/ace/ext-language_tools.js"></script>
-      
-      <script type="text/javascript">
-        (function($, window, document, undefined){
-          
-          "use strict";
-          
-          $(document).ready(function(){
-            var editor = ace.edit("editor");
-            editor.setTheme("ace/theme/textmate");
-            editor.getSession().setMode("ace/mode/javascript");
-            editor.setAnimatedScroll(true);
-            editor.setReadOnly(true);
-            
-            var pluginBody = document.getElementById("pluginBody");
-            editor.getSession().setValue(pluginBody.value);
-            
-            var urlOptions = {}
-            try {
-              window.location.search.slice(1).split(/[&]/).forEach(function(e) {
-                var parts = e.split("=");
-                urlOptions[decodeURIComponent(parts[0])] = decodeURIComponent(parts[1]);
-              });
-            } catch(e) {
-              console.error(e);
-            }
-            
-            function saveOption(el, val) {
-              if (!el.onchange && !el.onclick) {
-                return;
-              }
-
-              if ("checked" in el) {
-                if (typeof val !== "undefined") {
-                  el.checked = val;
-                }
-                localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
-              } else {
-                if (typeof val !== "undefined") {
-                  el.value = val;
-                }                  
-                localStorage && localStorage.setItem(el.id, el.value);
-              }
-            }
-            
-            function bindCheckbox(id, callback, noInit) {
-              if (typeof id == "string") {
-                var el = document.getElementById(id);
-              } else {
-                var el = id;
-                id = el.id;
-              }
-              var el = document.getElementById(id);
-              
-              if (urlOptions[id]) {
-                el.checked = urlOptions[id] == "1";
-              } else if (localStorage && localStorage.getItem(id)) {
-                el.checked = localStorage.getItem(id) == "1";
-              }
-
-              var onCheck = function() {
-                callback(!!el.checked);
-                saveOption(el);
-              };
-              el.onclick = onCheck;
-              noInit || onCheck();
-              return el;
-            };
-            
-            bindCheckbox("readOnly", function(checked){
-              editor.setReadOnly(checked);
-            });
-            
-            var raw = document.getElementById("raw");
-            raw.addEventListener("click", function(e){
-              var code = editor.getValue();
-              var blob = new Blob([code], {type: "text/plain"});
-              var url = URL.createObjectURL(blob);
-              window.open(url, '_blank');
-            }, false);
-          });
-        })(window.jQuery, window, document);
-      </script>
+      <script src="<?php echo $theme_url ?>/js/generator.js"></script>
     </body>
 </html>
