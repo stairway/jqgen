@@ -1,8 +1,6 @@
 <?php 
 
-include $_SERVER['DOCUMENT_ROOT'] . '/env.php';
-
-header('Content-Type: text/javascript');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/env.php';
 
 $typeMap = array(
   '1' => 'jquerySimple', 
@@ -898,7 +896,7 @@ JS;
   {$pluginName}.prototype = {
     constructor: {$pluginName},
     {$body}{$methodsA}
-  }
+  };
   {$methodsHCore}
   {$wrapper}
   
@@ -940,4 +938,11 @@ JS;
     break;
 }
 
-echo $out;
+function display($return = false) {
+    global $out;
+    if ($return) {
+      return $out;
+    } else {
+      echo $out;
+    }
+}
