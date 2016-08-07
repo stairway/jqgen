@@ -3,6 +3,18 @@
   "use strict";
   
   $(document).ready(function(){
+    var shadowTimeout = false;
+    
+    $(document).on("mousemove touchstart", function(){
+      $("#toolbar").addClass("shadow-bottom");
+      
+      clearTimeout(shadowTimeout);
+      
+      shadowTimeout = setTimeout(function(){
+        $("#toolbar").removeClass("shadow-bottom");
+      }, 1000);
+    });
+      
     var editor = ace.edit("editor");
     editor.setTheme("ace/theme/textmate");
     editor.getSession().setMode("ace/mode/javascript");
@@ -73,7 +85,7 @@
     });
     
     bindCheckbox("softTabs", function(checked){
-      editor.getSession().setUseSoftTabs(checked);
+      editor.getSession().setUseSoftTabs(!checked);
     });
     
     bindCheckbox("showInvisibles", function(checked){
