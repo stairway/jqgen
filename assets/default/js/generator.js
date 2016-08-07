@@ -3,7 +3,7 @@
   "use strict";
   
   var editor = ace.edit("editor");
-  editor.setTheme("ace/theme/sqlserver");
+  editor.setTheme("ace/theme/clouds");
   editor.getSession().setMode("ace/mode/javascript");
   editor.getSession().setUseSoftTabs(true);
   editor.setShowInvisibles(true);
