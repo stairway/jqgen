@@ -144,11 +144,13 @@
     function toolbarClick() {
       $("#toolbar").on("click.jqgen", function(){
         setToolbarAttached();
+        $("#detachToolbar").show();
         $("#toolbar").off("click.jqgen");
       });
     }
     
     $("#detachToolbar").on("click", function(e){
+      $(this).hide();
       setToolbarDetached();
       var timeout = setTimeout(function(){
         toolbarClick();
@@ -161,6 +163,7 @@
     
     $(window).resize(function(){
       if ($(this).width() <= deviceWidthSm) {
+        $("#detachToolbar").hide();
         if (!toolbarAttached) {
           setToolbarAttached();
         }
@@ -173,6 +176,7 @@
     });
     
     if ($(window).width() <= deviceWidthSm) {
+      $("#detachToolbar").hide();
       setToolbarAttached();
     } else {
       setToolbarDetached();
