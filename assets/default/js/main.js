@@ -1,7 +1,7 @@
 ;(function($, window, document, undefined) {
   $(document).ready(function(){
     var editor = ace.edit("editor");
-    editor.setTheme("ace/theme/clouds");
+    editor.setTheme("ace/theme/textmate");
     editor.getSession().setMode("ace/mode/javascript");
     
     $("a.btn[data-form]").on("click", function(e){
