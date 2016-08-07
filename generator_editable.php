@@ -43,6 +43,10 @@
                 <span class="hidden-sm-down">Show invisibles</span>
               </span>
             </label>
+            <a id="detachToolbar" href="#" class="m-l-1">
+              <i class="fa fa-external-link-square" aria-hidden="true"></i>
+              Detach Toolbar
+            </a>
           </div>
         </div>
       </div>

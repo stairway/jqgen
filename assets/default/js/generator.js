@@ -94,7 +94,7 @@
     function setToolbarAttached() {
       toolbarAttached = true;
       $("#toolbar").removeClass("hidden");
-      $("body").addClass("toolbar-attach");
+      $("body").addClass("toolbar-attached");
       $(document).off("mousemove.jqgen");
       $("#toolbar").off("mouseenter.jqgen");
       $("#toolbar").off("mouseleave.jqgen");
@@ -107,7 +107,7 @@
     
     function setToolbarDetached() {
       toolbarAttached = false;
-      $("body").removeClass("toolbar-attach");
+      $("body").removeClass("toolbar-attached");
       $(document).on("touchstart.jqgen", function(){
         $("#toolbar").removeClass("hidden");
       }).on("touchend.jqgen", function(){
@@ -141,6 +141,22 @@
       });
     }
     
+    function toolbarClick() {
+      $("#toolbar").on("click.jqgen", function(){
+        setToolbarAttached();
+        $("#toolbar").off("click.jqgen");
+      });
+    }
+    
+    $("#detachToolbar").on("click", function(e){
+      setToolbarDetached();
+      var timeout = setTimeout(function(){
+        toolbarClick();
+        clearTimeout(timeout);
+      }, 1000);
+      e.preventDefault();
+    });
+    
     var deviceWidthSm = 480;
     
     $(window).resize(function(){
@@ -151,6 +167,7 @@
       } else {
         if (toolbarAttached) {
           setToolbarDetached();
+          toolbarClick();
         }
       }
     });
@@ -159,6 +176,7 @@
       setToolbarAttached();
     } else {
       setToolbarDetached();
+      toolbarClick();
     }
   });
 })(window.jQuery, window, document);

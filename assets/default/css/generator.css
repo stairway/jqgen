@@ -39,11 +39,18 @@
   right: 0;
 }
 
-body.toolbar-attach #toolbar {
+body.toolbar-attached #toolbar {
   display: block;
 }
-body.toolbar-attach #editor {
+body.toolbar-attached #editor {
   top: 3rem;
+}
+
+#detachToolbar {
+  display: none;
+}
+.toolbar-attached #detachToolbar {
+  display: inline-block;
 }
 
 .hidden {

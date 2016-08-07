@@ -21,7 +21,7 @@
                   <h1 class="h1">jQGen</h1>
                   <h2 class="h2">The jQuery Plugin Generator</h2>
                   <h4 class="lead">Simple. Amazing.</h4>
-                  <p class="small lead">v1.4.5</p>
+                  <p class="small lead">v1.5</p>
                   <a href="#" data-form="generator" class="btn btn-primary">Quick Generate!</a>
                 </div>
               </header>
