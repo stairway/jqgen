@@ -952,7 +952,7 @@ JS;
       <link rel="stylesheet" href="<?php echo $theme_url ?>/css/generator.css" />
     </head>
     <body>
-      <div id="toolbar" class="container-fluid">
+      <div id="toolbar" class="container-fluid hidden">
         <div class="row">
           <div class="col-xs-12">
             <button id="raw" class="btn btn-secondary btn-sm">View Raw</button>
@@ -986,7 +986,7 @@ JS;
         </div>
       </div>
       <pre id="editor"></pre>
-      <textarea id="pluginBody"><?php echo $out ?></textarea>
+      <textarea id="pluginBody" class="hidden"><?php echo $out ?></textarea>
 
       <script src="<?php echo $theme_url ?>/js/jquery-2.1.4.min.js"></script>
       <script src="<?php echo $theme_url ?>/js/ace-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>

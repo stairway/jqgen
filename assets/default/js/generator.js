@@ -5,14 +5,36 @@
   $(document).ready(function(){
     var shadowTimeout = false;
     
-    $(document).on("mousemove touchstart", function(){
-      $("#toolbar").addClass("shadow-bottom");
-      
-      clearTimeout(shadowTimeout);
-      
+    $(document).on("touchstart", function(){
+      $("#toolbar").show();
+    }).on("touchend", function(){
       shadowTimeout = setTimeout(function(){
-        $("#toolbar").removeClass("shadow-bottom");
-      }, 1000);
+        $("#toolbar").hide();
+        clearTimeout(shadowTimeout);
+        shadowTimeout = false;
+      }, 3000);
+    });
+    
+    $(document).on("mousemove", function(){
+      $("#toolbar").removeClass("hidden");
+      
+      $("#toolbar").on("mouseenter", function(){
+        $("#toolbar").addClass("over");
+      }).on("mouseleave touchend", function(){
+        $("#toolbar").addClass("hidden");
+        $("#toolbar").removeClass("over");
+      });
+      
+      if (shadowTimeout) {
+        clearTimeout(shadowTimeout);
+        shadowTimeout = false;
+      }
+      
+      if (!($("#toolbar").is(".over")) || ($("#toolbar").is(".hidden") && $("#toolbar").is(".over"))) {
+        shadowTimeout = setTimeout(function(){
+          $("#toolbar").addClass("hidden");
+        }, 1000);
+      }
     });
       
     var editor = ace.edit("editor");
