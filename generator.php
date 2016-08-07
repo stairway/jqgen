@@ -631,10 +631,11 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
       } else {
 
       }
-    },
+    }
 JS;
   if ($apiMethods) {
     $methodsArr = explode(',', $apiMethods);
+    $methods .= ",";
     $methods .= <<<JS
 
     
