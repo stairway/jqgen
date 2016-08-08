@@ -1,3 +1,7 @@
+body {
+  overflow: hidden;
+}
+
 #toolbar {
   height: 3rem;
   position: relative;
@@ -32,7 +36,6 @@
 #editor { 
   margin: 0;
   position: absolute;
-  overflow: hidden;
   top: 0;
   bottom: 0;
   left: 0;

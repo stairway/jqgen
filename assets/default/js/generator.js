@@ -11,6 +11,7 @@
   editor.setReadOnly(true);
   editor.getSession().setFoldStyle("markbeginend");
   editor.setShowFoldWidgets(true);
+  editor.setOption("vScrollBarAlwaysVisible", true);
   
   var pluginBody = document.getElementById("pluginBody");
   editor.getSession().setValue(pluginBody.value);
@@ -149,7 +150,7 @@
       });
     }
     
-    $("#detachToolbar").on("click", function(e){
+    $("#detachToolbar").on("click.jqgen", function(e){
       $(this).hide();
       setToolbarDetached();
       var timeout = setTimeout(function(){
