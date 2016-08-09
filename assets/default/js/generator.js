@@ -96,6 +96,7 @@
       toolbarAttached = true;
       $("#toolbar").removeClass("hidden");
       $("body").addClass("toolbar-attached");
+      editor.resize();
       $(document).off("mousemove.jqgen");
       $("#toolbar").off("mouseenter.jqgen");
       $("#toolbar").off("mouseleave.jqgen");
@@ -109,6 +110,7 @@
     function setToolbarDetached() {
       toolbarAttached = false;
       $("body").removeClass("toolbar-attached");
+      editor.resize();
       $(document).on("touchstart.jqgen", function(){
         $("#toolbar").removeClass("hidden");
       }).on("touchend.jqgen", function(){
@@ -150,15 +152,19 @@
       });
     }
     
-    $("#detachToolbar").on("click.jqgen", function(e){
-      $(this).hide();
-      setToolbarDetached();
-      var timeout = setTimeout(function(){
-        toolbarClick();
-        clearTimeout(timeout);
-      }, 1000);
-      e.preventDefault();
-    });
+    function detachClick() {
+      $("#detachToolbar").on("click.jqgen", function(e){
+        $(this).hide();
+        setToolbarDetached();
+        var timeout = setTimeout(function(){
+          toolbarClick();
+          clearTimeout(timeout);
+        }, 1000);
+        e.preventDefault();
+      });
+    }
+    
+    detachClick();
     
     var deviceWidthSm = 480;
     
