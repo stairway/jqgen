@@ -5,7 +5,8 @@
   var editor = ace.edit("editor");
   editor.setTheme("ace/theme/textmate");
   editor.getSession().setMode("ace/mode/javascript");
-  editor.getSession().setUseSoftTabs(true);
+  editor.getSession().setUseSoftTabs(false);
+  editor.getSession().setTabSize(2);
   editor.setShowInvisibles(true);
   editor.setAnimatedScroll(true);
   editor.setReadOnly(true);
@@ -145,16 +146,19 @@
     }
     
     function toolbarClick() {
-      $("#toolbar").on("click.jqgen", function(){
-        setToolbarAttached();
-        $("#detachToolbar").show();
-        $("#toolbar").off("click.jqgen");
+      $("#toolbar").on("click.jqgen", function(e){
+        if ( $(e.target).is("div") ) {
+          setToolbarAttached();
+          $("#detachToolbar").show();
+          $("#toolbar").off("click.jqgen");
+        }
       });
     }
     
     function detachClick() {
       $("#detachToolbar").on("click.jqgen", function(e){
         $(this).hide();
+        $("#toolbar").addClass("hidden");
         setToolbarDetached();
         var timeout = setTimeout(function(){
           toolbarClick();

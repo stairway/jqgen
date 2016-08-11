@@ -16,7 +16,12 @@
       <div id="toolbar" class="container-fluid shadow-bottom hidden">
         <div class="row">
           <div class="col-xs-12">
-            <button id="raw" class="btn btn-secondary btn-sm">View Raw</button>
+            <button id="raw" class="btn btn-secondary btn-sm">
+              <i class="fa fa-file-code-o hidden-md-up" aria-hidden="true"></i>
+              <span class="hidden-sm-down">
+                View Raw
+              </span>
+            </button>
             <label class="custom-control custom-checkbox m-l-1">
               <input id="readOnly" name="readOnly" type="checkbox" class="custom-control-input">
               <span class="custom-control-indicator"></span>
@@ -45,7 +50,7 @@
             </label>
             <a id="detachToolbar" href="#" class="m-l-1">
               <i class="fa fa-external-link-square" aria-hidden="true"></i>
-              Detach Toolbar
+              <span class="hidden-sm-down">Detach Toolbar</span>
             </a>
           </div>
         </div>
