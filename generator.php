@@ -8,12 +8,12 @@ $typeMap = array(
 	'3' => 'jqueryFnApi'
 );
 
-$includeLicense		 	= $_REQUEST['includeLicense'];
-$licenseOrg				 	= trim($_REQUEST['licenseOrg']) ? trim($_REQUEST['licenseOrg']) : 'jQGen';
+$includeLicense			= $_REQUEST['includeLicense'];
+$licenseOrg					= trim($_REQUEST['licenseOrg']) ? trim($_REQUEST['licenseOrg']) : 'jQGen';
 $copyrightYear			= trim($_REQUEST['copyrightYear']) ? trim($_REQUEST['copyrightYear']) : date('Y');
 $pluginVersion			= trim($_REQUEST['pluginVersion']) ? trim($_REQUEST['pluginVersion']) : "1.0.0";
 $pluginStyle				= $_REQUEST['pluginStyle'];
-$pluginName				 	= trim($_REQUEST['pluginName']) ? trim($_REQUEST['pluginName']) : "MyPlugin";
+$pluginName					= trim($_REQUEST['pluginName']) ? trim($_REQUEST['pluginName']) : "MyPlugin";
 $pluginDescription	= trim($_REQUEST['pluginDescription']) ? 
 												trim($_REQUEST['pluginDescription']) : 
 													"A jQuery plugin";
@@ -24,21 +24,21 @@ $pluginDescriptionDefault = <<<JS
 @usage: $('selector').{$pluginName}(callback)
 JS;
 $pluginDescription	= $pluginDescription . $pluginDescriptionDefault;
-$pluginPrefix			 	= trim($_REQUEST['pluginPrefix']) ? 
+$pluginPrefix				= trim($_REQUEST['pluginPrefix']) ? 
 												trim($_REQUEST['pluginPrefix']) :
 													substr(strtolower($pluginName), 0, 1) . preg_replace('/[aeiou]/i', '', substr(strtolower($pluginName), 1));
 $pluginNamespace		= trim($_REQUEST['pluginNamespace']) ?
 												trim($_REQUEST['pluginNamespace']) : 
 													lcfirst(trim($pluginName));
 $globalVars					= trim($_REQUEST['globalVars']);
-$globalVarsJquery	 	= trim($_REQUEST['globalVarsJquery']);
+$globalVarsJquery		= trim($_REQUEST['globalVarsJquery']);
 $helperMethods			= trim($_REQUEST['helperMethods']);
-$apiMethods				 	= trim($_REQUEST['apiMethods']);
-$defaultOptions		 	= trim($_REQUEST['defaultOptions']);
-$pluginBody				 	= $_REQUEST['pluginBody'];
+$apiMethods					= trim($_REQUEST['apiMethods']);
+$defaultOptions			= trim($_REQUEST['defaultOptions']);
+$pluginBody					= $_REQUEST['pluginBody'];
 
-$coreEvents				 	= "init, ready, complete";
-$pluginEvents			 	= trim($_REQUEST['pluginEvents']) ? $coreEvents . ", " . trim($_REQUEST['pluginEvents']) : $coreEvents;
+$coreEvents					= "init, ready, complete";
+$pluginEvents				= trim($_REQUEST['pluginEvents']) ? $coreEvents . ", " . trim($_REQUEST['pluginEvents']) : $coreEvents;
 $generatedBy				= "http://".$_SERVER['SERVER_NAME'];
 
 /**
@@ -144,7 +144,7 @@ JS;
 			// MAIN BODY - END
 			
 		}
-		
+
 		init();
 JS;
 	return $body;
@@ -195,7 +195,7 @@ function buildWrapper_fnApi($pluginName) {
 	/* ============================================================= 
 	PLUGIN DEFINITION
 	============================================================= */
-	 
+
 	/**
 	 * The following method should be called with it's context manually specified, e.g.
 	 * using .bind(), .call(), or .apply();
@@ -220,7 +220,7 @@ function buildWrapper_fnApi($pluginName) {
 		if (typeof option === "string") { return data[option](); }
 		return data;
 	}
-	
+
 	/**
 	 * The actual jQuery plugin defintion
 	 */
@@ -243,13 +243,13 @@ function buildVars_fnApi($pluginName, $pluginPrefix, $pluginNamespace, $pluginVe
 	$out = <<<JS
 	
 	var 
-	
+
 	__debug = true,
-	
+
 	/* =============================================================
 	GLOBALS - Branding
 	============================================================= */
-	
+
 	pluginName = "{$pluginName}",
 	pluginPrefix = "{$pluginPrefix}",
 	pluginNamespace = "{$pluginNamespace}",
@@ -258,7 +258,7 @@ function buildVars_fnApi($pluginName, $pluginPrefix, $pluginNamespace, $pluginVe
 	/* =============================================================
 	GLOBALS - Cached jQuery object variables
 	============================================================= */
-	
+
 	\$events = $('<a/>'), // $({}) would be prefered, but there is an issue with jQuery 1.4.2
 	\$source = false,
 JS;
@@ -280,13 +280,11 @@ JS;
 	GLOBALS - Other variables for cached values 
 	or use across multiple functions
 	============================================================= */
-	
-	debug = false, // holds reference to Debug()
+
+	debug = new Debug(__debug_), // holds reference to Debug()
 	selector = false, // holds reference to Selector()
-	
 	self = false,
 	settings = false,
-	triggerContext = document,
 JS;
 	if ($varsG) {
 		$out .= <<<JS
@@ -314,14 +312,14 @@ function buildEvents_fnApi($pluginEvents, $pluginPrefix, $pluginNamespace) {
 		foreach($eventsArr as $event) {
 			$event = trim($event);
 			$events .= <<<JS
-	
+
 	/**
 	 * name: {$pluginPrefix}:{$event}
 	 * listen: \$(document).on("{$pluginPrefix}:{$event}.{$pluginNamespace}", function (event, api) {});
 	 * trigger: trigger (event_{$event}, [this]);
 	 */
 	event_{$event} = pluginPrefix + ":${event}",
-	
+
 JS;
 		}
 		$out .= <<<JS
@@ -345,7 +343,7 @@ function buildDefaults_fnApi($defaultOptions) {
 	/* =============================================================
 	GLOBALS - Default Options
 	============================================================= */
-	
+
 JS;
 	if ($defaultOptions) {
 		$options = "";
@@ -368,12 +366,12 @@ JS;
 		}
 	
 		$defaults .= <<<JS
-	
+
 	defaults = {{$options}}
 JS;
 	} else {
 		$defaults .= <<<JS
-		
+
 	defaults = {}
 JS;
 	}
@@ -450,43 +448,46 @@ function buildHelperMethodsCore_fnApi() {
 	 * Debugger
 	 * For easy debug handling
 	 */
-	function Debug ( debug ) {
+	function Debug ( debug, label ) {
 		
 		this.debug = debug;
-		
-		return {
-			log: function ( label /*, arg2, arg3, ... argN */ ) {
-				if (this.debug && typeof console === "object") {
-					var 
-					separator = " --- ",
-					args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-					if (console.hasOwnProperty("log")) {
-						args[0] = (label.toString() + separator);
-						console.log.apply(this, args);
-					}
-				}
-			},
-			
-			table: function ( label ) {
-				if (this.debug && typeof console === "object") {
-					var args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-					if (typeof label === "string") {
-						this.log(label);
-						args.shift();
-					}
-					if (console.hasOwnProperty("table")) {
-						console.table.apply(this, args);
-					} else {
-						this.log("console.table not supported", args);
-					}
-				}
-			},
-	
-			alert: function ( msg ) {
-				if (debug) {
-					alert(msg);
+		this.label = label || pluginName;
+
+		this.log = function ( label /*, arg2, arg3, ... argN */ ) {
+			if (this.debug && typeof console === "object") {
+				var 
+				separator = " --- ",
+				args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+				if (console.hasOwnProperty("log")) {
+					args[0] = (this.label.toString() + separator + label.toString() + separator);
+					console.log.apply(this, args);
 				}
 			}
+		};
+		
+		this.table = function ( label ) {
+			if (this.debug && typeof console === "object") {
+				var args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
+				if (typeof label === "string") {
+					this.log(label);
+					args.shift();
+				}
+				if (console.hasOwnProperty("table")) {
+					console.table.apply(this, args);
+				} else {
+					this.log("console.table not supported", args);
+				}
+			}
+		};
+
+		this.alert = function ( msg ) {
+			if (debug) {
+				alert(msg);
+			}
+		};
+		
+		this.error = function ( msg ) {
+			this.alert(msg || "error");
 		};
 	}
 	
@@ -494,77 +495,82 @@ function buildHelperMethodsCore_fnApi() {
 	 * Selector...er
 	 * For easy selector handling
 	 */
-	function Selector () {
-		return {
-			getDOMSelector: function ( el, full ) {
-				var selector = $(el)
-					.parents()
-					.map(function() { return el.tagName; })
-					.get()
-					.reverse()
-					.concat([el.nodeName])
-					.join(" > ");
+	function Selector ( selector ) {
 
-				var id = $(el).attr("id");
-				if (id) { 
-					selector += "#"+ id;
-				}
-
-				var classNames = $(el).attr("class");
-				if (classNames) {
-					selector += "." + $.trim(classNames).replace(/\s/gi, ".");
-				}
+		this.selector = selector;
 		
-				if (!full) {
-					var parts = selector.split("#");
-					if (parts.length > 1) {
-						parts.shift();
-						selector = "#" + parts.join();
-					}
-				}
-		
-				return selector;
-			},
-	
-			getSelector: function ( el ) {
-				var \$el = $(el);
+		this.getDOMSelector = function ( full ) {
+			var el = this.selector;
+			
+			var selector = $(el)
+				.parents()
+				.map(function() { return el.tagName; })
+				.get()
+				.reverse()
+				.concat([el.nodeName])
+				.join(" > ");
 
-				var id = \$el.attr("id");
-				if (id) { //"should" only be one of these if theres an ID
-					return "#"+ id;
-				}
-
-				var selector = \$el
-					.parents()
-					.map(function() { return this.tagName; })
-					.get()
-					.reverse()
-					.join(" ");
-
-				if (selector) {
-					selector += " "+ \$el[0].nodeName;
-				}
-
-				var classNames = \$el.attr("class");
-				if (classNames) {
-					selector += "." + $.trim(classNames).replace(/\s/gi, ".");
-				}
-
-				var name = \$el.attr('name');
-				if (name) {
-					selector += "[name='" + name + "']";
-				}
-				if (!name) {
-					var index = \$el.index();
-					if (index) {
-						index = index + 1;
-						selector += ":nth-child(" + index + ")";
-					}
-				}
-		
-				return selector;
+			var id = $(el).attr("id");
+			if (id) { 
+				selector += "#"+ id;
 			}
-		}
+
+			var classNames = $(el).attr("class");
+			if (classNames) {
+				selector += "." + $.trim(classNames).replace(/\s/gi, ".");
+			}
+	
+			if (!full) {
+				var parts = selector.split("#");
+				if (parts.length > 1) {
+					parts.shift();
+					selector = "#" + parts.join();
+				}
+			}
+	
+			return selector;
+		};
+
+		this.getSelector = function () {
+			var el = this.selector;
+			
+			var \$el = $(el);
+
+			var id = \$el.attr("id");
+			if (id) { //"should" only be one of these if theres an ID
+				return "#"+ id;
+			}
+
+			var selector = \$el
+				.parents()
+				.map(function() { return this.tagName; })
+				.get()
+				.reverse()
+				.join(" ");
+
+			if (selector) {
+				selector += " "+ \$el[0].nodeName;
+			}
+
+			var classNames = \$el.attr("class");
+			if (classNames) {
+				selector += "." + $.trim(classNames).replace(/\s/gi, ".");
+			}
+
+			var name = \$el.attr('name');
+			if (name) {
+				selector += "[name='" + name + "']";
+			}
+			if (!name) {
+				var index = \$el.index();
+				if (index) {
+					index = index + 1;
+					selector += ":nth-child(" + index + ")";
+				}
+			}
+	
+			return selector;
+		};
 	}
 	
 	function test ( input, type ) {
@@ -575,29 +581,12 @@ function buildHelperMethodsCore_fnApi() {
 		return false;
 	}
 
-	function trigger ( event, args ) {
-		var context = triggerContext;
+	function trigger ( event, args, context ) {
+		context = context || document;
 		// for external use
 		$(context).trigger(event, args);
 		// for internal use
 		\$events.triggerHandler(event);
-	}
-
-	function log ( label /*, arg2, arg3, ... argN */ ) {
-		if ( __debug && typeof console === "object" ) {
-			var 
-			separator = " --- ",
-			args = (arguments.length === 1 ? [arguments[0]] : Array.apply(null, arguments));
-			if ( label === __table && console.hasOwnProperty("table") ) {
-				args.shift();
-				console.table.apply(this, args);
-			} else {
-				if ( console.hasOwnProperty("log") ) {
-					args[0] = (label.toString() + separator);
-					console.log.apply(this, args);
-				}
-			}
-		}
 	}
 
 	function doCallback ( callback, argsArr, context ) {
@@ -663,23 +652,27 @@ function buildApiMethods_fnApi($pluginName, $apiMethods) {
 		onReady: function() {
 			var callback = self._callback, el = this.element;
 			
-			doCallback(callback, [self], el);
 			trigger(event_ready, [el, self]);
+			doCallback(callback, [self], el);
+
+			return self;
 		},
-		
+
 		addBindings: function () {
 			
 			// $(document).on(...
 			
-			return this.\$element;
+			return self;
 		},
-		
+
 		prep: function () {
 			if ( this._DOMSelector ) {
 				\$source = this.\$element;
 			} else {
 
 			}
+
+			return self;
 		}
 JS;
 	if ($apiMethods) {
@@ -733,19 +726,18 @@ function buildConstructor_fnApi($pluginName) {
 	 * @usage: new {$pluginName}(element, options, callback)
 	 */
 	function {$pluginName} ( element, options, callback ) {
-		debug = new Debug(__debug || false);
-		selector = new Selector();
-		
+		selector = new Selector(element);
+
 		this._defaults = defaults;
 		this._options = options;
 		this._callback = callback;
 		this._name = pluginName;
 		this._version = pluginVersion;
-		this._DOMSelector = selector.getDOMSelector(element);
+		this._DOMSelector = selector.getDOMSelector();
 
 		this.element = element;
 		this.\$element = $(element);
-		this.selector = selector.getSelector(element);
+		this.selector = selector.getSelector();
 
 		/*
 		 * This next line takes advantage of HTML5 data attributes
@@ -754,11 +746,11 @@ function buildConstructor_fnApi($pluginName) {
 		 * <div class='item' data-plugin-options='{"message":"Goodbye World!"}'></div>
 		 */
 		this.metadata = this.\$element.data( "plugin-options" );
-		
+
 		this.settings = $.extend({}, this._defaults, this._options, this.metadata);
 
 		this.init();
-		
+
 		this.onReady();
 	}
 JS;
@@ -774,10 +766,10 @@ function buildBody_fnApi($pluginName, $str) {
 
 			self = this;
 			settings = this.settings;
-			
+
 			this.prep();
 			this.addBindings();
-			
+
 			// MAIN BODY - BEGIN
 			
 			
@@ -801,11 +793,12 @@ JS;
 	
 		init: function () {{$lines}
 			// MAIN BODY - END
-			
+
 			trigger(event_init, [this]);
-			return this.\$element;
+
+			return self;
 		},
-		
+
 JS;
 	return $body;
 }
@@ -958,7 +951,7 @@ JS;
 	 * Make defaults publicly accessible
 	 */
 	$.fn[pluginName].defaults = defaults;
-	
+
 	/* 
 	 * This next line makes the constructor publicly accessible.
 	 *
@@ -982,7 +975,7 @@ JS;
 	 * then you have a consistent interface for accessing the classes behind each plugin.
 	 */
 	$.fn[pluginName].Constructor = {$pluginName};
-	
+
 })( window.jQuery, window, document );
 JS;
 		break;
