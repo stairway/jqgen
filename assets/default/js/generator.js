@@ -32,7 +32,7 @@
       return;
     }
 
-    if ("checked" in el) {
+    if (el.type === "checkbox" || el.type === "radio") {
       if (typeof val !== "undefined") {
         el.checked = val;
       }
@@ -40,7 +40,7 @@
     } else {
       if (typeof val !== "undefined") {
         el.value = val;
-      }                  
+      }
       localStorage && localStorage.setItem(el.id, el.value);
     }
   }
@@ -69,6 +69,31 @@
     return el;
   };
   
+  function bindTextfield(id, callback, noInit) {
+    if (typeof id == "string") {
+      var el = document.getElementById(id);
+    } else {
+      var el = id;
+      id = el.id;
+    }
+    var el = document.getElementById(id);
+    
+    if (urlOptions[id]) {
+      el.value = urlOptions[id].value;
+    } else if (localStorage && localStorage.getItem(id)) {
+      el.value = localStorage.getItem(id).value;
+    }
+
+    var onChange = function() {
+      var value = parseInt(el.value) || parseInt(el.defaultValue);
+      callback(value);
+      saveOption(el, value);
+    };
+    el.onchange = onChange;
+    noInit || onChange();
+    return el;
+  };
+  
   bindCheckbox("readOnly", function(checked){
     editor.setReadOnly(checked);
   });
@@ -79,6 +104,10 @@
   
   bindCheckbox("showInvisibles", function(checked){
     editor.setShowInvisibles(checked);
+  });
+  
+  bindTextfield("tabSize", function(value){
+    editor.getSession().setTabSize(value);
   });
   
   var raw = document.getElementById("raw");
@@ -147,7 +176,7 @@
     
     function toolbarClick() {
       $("#toolbar").on("click.jqgen", function(e){
-        if ( $(e.target).is("div") ) {
+        if ( $(e.target).is("#toolbar") || $(e.target).is("#editorOptions") ) {
           setToolbarAttached();
           $("#detachToolbar").show();
           $("#toolbar").off("click.jqgen");
@@ -184,6 +213,11 @@
           toolbarClick();
         }
       }
+    });
+    
+    $("form").on("submit", function(e){
+      e.preventDefault();
+      return false;
     });
     
     if ($(window).width() <= deviceWidthSm) {

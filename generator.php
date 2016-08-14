@@ -241,7 +241,7 @@ JS;
  */
 function buildVars_fnApi($pluginName, $pluginPrefix, $pluginNamespace, $pluginVersion, $events, $defaults, $varsG, $varsJ) {
 	$out = <<<JS
-	
+
 	var 
 
 	__debug = true,
@@ -323,7 +323,7 @@ function buildEvents_fnApi($pluginEvents, $pluginPrefix, $pluginNamespace) {
 JS;
 		}
 		$out .= <<<JS
-	
+
 	/* =============================================================
 	GLOBALS - Events
 	============================================================= */

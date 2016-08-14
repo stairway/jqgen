@@ -16,42 +16,52 @@
       <div id="toolbar" class="container-fluid shadow-bottom hidden">
         <div class="row">
           <div class="col-xs-12">
-            <button id="raw" class="btn btn-secondary btn-sm">
-              <i class="fa fa-file-code-o hidden-md-up" aria-hidden="true"></i>
-              <span class="hidden-sm-down">
-                View Raw
-              </span>
-            </button>
-            <label class="custom-control custom-checkbox m-l-1">
-              <input id="readOnly" name="readOnly" type="checkbox" class="custom-control-input">
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">
-                <i class="fa fa-eye hidden-md-up" aria-hidden="true"></i>
+            <form id="editorOptions" class="form-inline">
+              <button id="raw" class="btn btn-secondary btn-sm">
+                <i class="fa fa-file-code-o hidden-md-up" aria-hidden="true"></i>
                 <span class="hidden-sm-down">
-                  Read only
+                  View Raw
                 </span>
-              </span>
-            </label>
-            <label class="custom-control custom-checkbox m-l-1">
-              <input id="softTabs" name="softTabs" type="checkbox" class="custom-control-input" checked>
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">
-                <i class="fa fa-indent hidden-md-up" aria-hidden="true"></i>
-                <span class="hidden-sm-down">Use real tabs</span>
-              </span>
-            </label>
-            <label class="custom-control custom-checkbox m-l-1">
-              <input id="showInvisibles" name="showInvisibles" type="checkbox" class="custom-control-input" checked>
-              <span class="custom-control-indicator"></span>
-              <span class="custom-control-description">
-                <i class="fa fa-dot-circle-o hidden-md-up" aria-hidden="true"></i>
-                <span class="hidden-sm-down">Show invisibles</span>
-              </span>
-            </label>
-            <a id="detachToolbar" href="#" class="m-l-1">
-              <i class="fa fa-external-link-square" aria-hidden="true"></i>
-              <span class="hidden-sm-down">Detach Toolbar</span>
-            </a>
+              </button>
+              <label class="custom-control custom-checkbox">
+                <input id="readOnly" name="readOnly" type="checkbox" class="custom-control-input">
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">
+                  <i class="fa fa-eye hidden-md-up" aria-hidden="true"></i>
+                  <span class="hidden-sm-down">
+                    Read only
+                  </span>
+                </span>
+              </label>
+              <label class="custom-control custom-checkbox">
+                <input id="softTabs" name="softTabs" type="checkbox" class="custom-control-input" checked>
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">
+                  <i class="fa fa-indent hidden-md-up" aria-hidden="true"></i>
+                  <span class="hidden-sm-down">Use real tabs</span>
+                </span>
+              </label>
+              <div class="form-group">
+                <label for="tabSize" class="form-control-label">
+                  <span class="hidden-sm-down">Tab Size</span>
+                  <input type="text" id="tabSize" name="tabSize" class="form-control" value="2" maxlength="1" />
+                </label>
+              </div>
+              <label class="custom-control custom-checkbox">
+                <input id="showInvisibles" name="showInvisibles" type="checkbox" class="custom-control-input" checked>
+                <span class="custom-control-indicator"></span>
+                <span class="custom-control-description">
+                  <i class="fa fa-dot-circle-o hidden-md-up" aria-hidden="true"></i>
+                  <span class="hidden-sm-down">Show invisibles</span>
+                </span>
+              </label>
+              <label>
+                <a id="detachToolbar" href="#">
+                  <i class="fa fa-external-link-square" aria-hidden="true"></i>
+                  <span class="hidden-sm-down">Detach Toolbar</span>
+                </a>
+              </label>
+            </form>
           </div>
         </div>
       </div>
