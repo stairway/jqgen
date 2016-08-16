@@ -13,7 +13,7 @@
       <link rel="stylesheet" href="<?php echo $theme_url ?>/css/generator.css" />
     </head>
     <body>
-      <div id="toolbar" class="container-fluid shadow-bottom hidden">
+      <div id="toolbar" class="container-fluid shadow-bottom">
         <div class="row">
           <div class="col-xs-12">
             <form id="editorOptions" class="form-inline">
@@ -24,7 +24,7 @@
                 </span>
               </button>
               <label class="custom-control custom-checkbox">
-                <input id="readOnly" name="readOnly" type="checkbox" class="custom-control-input">
+                <input id="readOnly" name="readOnly" type="checkbox" class="custom-control-input" checked>
                 <span class="custom-control-indicator"></span>
                 <span class="custom-control-description">
                   <i class="fa fa-eye hidden-md-up" aria-hidden="true"></i>

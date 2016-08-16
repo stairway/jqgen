@@ -36,12 +36,20 @@
       if (typeof val !== "undefined") {
         el.checked = val;
       }
-      localStorage && localStorage.setItem(el.id, el.checked ? 1 : 0);
+      try {
+        window.localStorage.setItem(el.id, el.checked ? 1 : 0);
+      } catch(e) {
+        
+      }
     } else {
       if (typeof val !== "undefined") {
         el.value = val;
       }
-      localStorage && localStorage.setItem(el.id, el.value);
+      try {
+        window.localStorage && localStorage.setItem(el.id, el.value);
+      } catch(e) {
+        
+      }
     }
   }
   
@@ -67,7 +75,7 @@
     el.onclick = onCheck;
     noInit || onCheck();
     return el;
-  };
+  }
   
   function bindTextfield(id, callback, noInit) {
     if (typeof id == "string") {
@@ -92,7 +100,7 @@
     el.onchange = onChange;
     noInit || onChange();
     return el;
-  };
+  }
   
   bindCheckbox("readOnly", function(checked){
     editor.setReadOnly(checked);
@@ -110,17 +118,25 @@
     editor.getSession().setTabSize(value);
   });
   
-  var raw = document.getElementById("raw");
-  raw.addEventListener("click", function(e){
-    var code = editor.getValue();
-    var blob = new Blob([code], {type: "text/plain"});
-    var url = URL.createObjectURL(blob);
-    window.open(url, '_blank');
-  }, false);
+  //var raw = document.getElementById("raw");
+  //raw.addEventListener("click", function(e){
+  //  var code = editor.getValue();
+  //  var blob = new Blob([code], {type: "text/plain"});
+  //  var url = URL.createObjectURL(blob);
+  //  window.open(url, '_blank');
+  //}, false);
   
   $(document).ready(function(){
     var shadowTimeout = false;
     var toolbarAttached = false;
+    
+    var raw = $("#raw");
+    raw.on("click", function(){
+      var code = editor.getValue();
+      var blob = new Blob([code], {type: "text/plain"});
+      var url = URL.createObjectURL(blob);
+      window.open(url, '_blank');
+    });
     
     function setToolbarAttached() {
       toolbarAttached = true;
@@ -215,7 +231,7 @@
       }
     });
     
-    $("form").on("submit", function(e){
+    $("#editorOptions").on("submit", function(e){
       e.preventDefault();
       return false;
     });
